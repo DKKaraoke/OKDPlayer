@@ -47,9 +47,9 @@ A `key.bin` file is necessary to play scrambled OKD files. I do not provide this
 
 **Recommended Hardware:**
 
-  * The **CNVX1K module** by [Luna Tsukinashi](https://lunatsukina.si/).
+  * **CNVX1K module**(for X8202 Board) by [Luna Tsukinashi](https://lunatsukina.si/).
+  * **SPRITE!(CNVX5K) module**(for YC945 Board) by [Luna Tsukinashi](https://lunatsukina.si/).
   * Or an equivalent MIDI sound module, such as the **Yamaha MMT-TG**.
-
 -----
 
 ## Known Bugs
