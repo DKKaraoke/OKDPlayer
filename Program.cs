@@ -10,15 +10,22 @@ namespace OKDPlayer
 {
     internal class Program
     {
+        private static int kdspVolume = 0x75; //Default KDSP volume
+        private static byte kdspHighFreq = 0x22; //Default KDSP high frequency
+        private static byte kdspLowFreq = 0x22; //Default KDSP low frequency
         private static int transposeKey = 0;
         private static bool guideMelMuted = false;
         private static int syncoffsetAdpcm = 0;
         private static string inputOKDFile = string.Empty;
+        private static string kdspDevPort = string.Empty;
         private static int[] midiDevIndexes = new int[] { };
         public class OKDPlayerCommandlineOptions
         {
             [Option('m', "midi-devices", Required = false, HelpText = "Set midi playback devices as number, Ex: 1 2 3 4")]
             public IEnumerable<int> midiDevIndexs { get; set; }
+
+            [Option('k', "kdsp-devices", Required = false, HelpText = "Set Karaoke DSP (KDSP) devices as number or Serial Port. Ex: 10, COM10")]
+            public string kdspDevPort { get; set; }
 
             [Option('i', "input-okd-file", Required = true, HelpText = "Path to OKD file to play.")]
             public string inputOKDFile { get; set; }
@@ -46,7 +53,8 @@ namespace OKDPlayer
                  syncoffsetAdpcm = o.syncOffsetAdpcm;
                  inputOKDFile = o.inputOKDFile;
                  midiDevIndexes = new int[o.midiDevIndexs.Count()];
-
+                 if(o.kdspDevPort != null)
+                     kdspDevPort = o.kdspDevPort;
                  for (int i = 0; i < o.midiDevIndexs.Count(); i++)
                  {
                      midiDevIndexes[i] = o.midiDevIndexs.ElementAt(i);
@@ -112,8 +120,16 @@ namespace OKDPlayer
                 }
             }
 
-           
-            
+            if(kdspDevPort != string.Empty)
+            {
+                Console.WriteLine($"Setting KDSP device at port: {kdspDevPort}");
+                okd.SetKDSPDevice(kdspDevPort);
+
+                Console.WriteLine($"Setting KDSP volume to default ({kdspVolume}).");
+                okd.KDSPDev.SetDSPVolume((byte)kdspVolume);
+            }
+
+
             if (midiDevIndexes.Length < okd.PTracks.Length)
             {
                 Console.WriteLine($"WARNING: There is not enough MIDI device to play the file. Playback will be wrong!");
@@ -139,7 +155,8 @@ namespace OKDPlayer
                 if (!res)
                 {
                     Console.WriteLine($"Failed to open MIDI device at index {part}. Please check the device and try again.");
-                    return;
+                    Environment.Exit(1);
+                    //return;
                 }
                 midiDevsList.Add(dev);
             }
@@ -258,6 +275,70 @@ namespace OKDPlayer
                         okd.Transpose(transposeKey);
                         Console.WriteLine($"Transposing down: {transposeKey} semitones");
                     }
+                    else if(key == ConsoleKey.End)
+                    {
+                        if(okd.KDSPDev is not null)
+                        {
+                            kdspVolume++;
+                            if (kdspVolume > 127)
+                                kdspVolume = 127;
+                            okd.KDSPDev.SetDSPVolume((byte)kdspVolume);
+                            Console.WriteLine($"Set KDSP volume down (Volume: {kdspVolume}).");
+                        }
+                        
+                    }
+                    else if (key == ConsoleKey.Home)
+                    {
+                        if (okd.KDSPDev is not null)
+                        {
+                            kdspVolume--;
+                            if (kdspVolume < 0)
+                                kdspVolume = 0;
+                            okd.KDSPDev.SetDSPVolume((byte)kdspVolume);
+                            Console.WriteLine($"Set KDSP volume up (Volume: {kdspVolume}).");
+                        }
+                        
+                    }
+                    else if (key == ConsoleKey.F1)
+                    {
+                        if (okd.KDSPDev is not null)
+                        {
+                            kdspHighFreq++;
+                            okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
+                            Console.WriteLine($"Adjusting KDSP High Frequency up. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
+
+                            
+                        }
+                        
+                    }
+                    else if (key == ConsoleKey.F2)
+                    {
+                        if (okd.KDSPDev is not null)
+                        {
+                            kdspHighFreq--;
+                            okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
+                            Console.WriteLine($"Adjusting KDSP High Frequency down. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
+                        }
+                    }
+                    else if (key == ConsoleKey.F3)
+                    {
+                        if (okd.KDSPDev is not null)
+                        {
+                            kdspLowFreq++;
+                            okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
+                            Console.WriteLine($"Adjusting KDSP Low Frequency up. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
+                        }
+                    }
+                    else if (key == ConsoleKey.F4)
+                    {
+                        if (okd.KDSPDev is not null)
+                        {
+                            kdspLowFreq--;
+                            okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
+                            Console.WriteLine($"Adjusting KDSP Low Frequency down. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
+                        }
+                    }
+
                     else if (key == ConsoleKey.V)
                     {
                         Console.WriteLine($"Adjusting TG volume.");

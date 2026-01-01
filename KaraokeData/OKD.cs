@@ -200,6 +200,7 @@ public class OKD
     public OKDPTrackInfo PTrackInfo { get; private set; }
     public OKDPTrack[] PTracks { get; private set; }
     public OKDMIDIDevice[] MIDIDev { get; private set; }
+    public OKDKDSPDevice KDSPDev { get; private set; }
     public uint FirstNoteONTime { get; private set; } = 0;
     public uint TotalPlayTime { get; private set; } = 0;
     public byte[][] BackChoursPCM { get; private set; } = null;
@@ -609,6 +610,29 @@ public class OKD
         this.MIDIDev = midiDevice;
     }
 
+    public void SetKDSPDevice(string devPort)
+    {
+        string normarlized = devPort.ToUpper().Trim();
+        if(devPort.StartsWith("COM"))
+        {
+            this.KDSPDev = new OKDKDSPDevice(devPort);
+        }
+        else //Starts with dev index
+        {
+            int devIndex;
+            if (!int.TryParse(normarlized, out devIndex))
+                throw new ArgumentException("Invalid KDSP device port/index.");
+
+            IMIDIDevice dev = null;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                dev = new WinMIDIDevice();
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                dev = new LinuxMIDIDevice();
+            dev.Open(devIndex);
+
+            this.KDSPDev = new OKDKDSPDevice(dev);
+        }
+    }
     public void LoadFromFile(string filePath, string keyfilePath = null)
     {
         if (!File.Exists(filePath))
