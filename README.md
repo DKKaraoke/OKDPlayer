@@ -21,6 +21,7 @@ OKDPlayer.exe -i <path_to_okd_file> <options>
 Options:
   -i, --input-okd-file     Path to OKD file to play
   -m, --midi-devices       Set midi playback devices as number, Ex: 1 2 3 4
+  -k, --kdsp-device		   Set Karaoke DSP (KDSP) devices as number or Serial Port. Ex: 10, COM10
   -g, --guide-melody-mute  Mute guide melody (PTrack 1, Channel 8) on start
   -t, --transpose          Transpose key in semitones (positive or negative)
   -s, --sync-offset-adpcm  Sync offset in milliseconds to apply when ADPCM chorus is present.
@@ -34,6 +35,8 @@ A `key.bin` file is necessary to play scrambled OKD files. I do not provide this
   * **Up/Down Arrow Keys:** Adjust tempo
   * **Left/Right Arrow Keys:** Seek backward/forward by 10 seconds
   * **Page Up/Page Down Keys:** Adjust pitch (in semitones)
+  * **Home/End Keys:** Adjust KDSP Volume up/down
+  * **F1/F2, F3/F4 Keys:** Adjust KDSP Tone (Treble/Bass) up/down (Currently not working)
   * **P Key:** Pause/Resume playback
   * **G Key:** Toggle Guide melody on/off (Not working some TGMode0 OKD)
   * **Number Keys (1-9):** Mute/Unmute Specific PTrack playback
@@ -63,7 +66,7 @@ A `key.bin` file is necessary to play scrambled OKD files. I do not provide this
 
   * Add fully support for ADPCM back chorus.
   * Full support for the Linux platform.
-
+  * Support for Serial KDSP devices.
 -----
 
 ## Contributing
