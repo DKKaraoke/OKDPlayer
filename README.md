@@ -36,7 +36,7 @@ A `key.bin` file is necessary to play scrambled OKD files. I do not provide this
   * **Left/Right Arrow Keys:** Seek backward/forward by 10 seconds
   * **Page Up/Page Down Keys:** Adjust pitch (in semitones)
   * **Home/End Keys:** Adjust KDSP Volume up/down
-  * **F1/F2, F3/F4 Keys:** Adjust KDSP Tone (Treble/Bass) up/down (Currently not working)
+  * **F1/F2, F3/F4 Keys:** Adjust KDSP Tone (Treble/Bass) up/down
   * **P Key:** Pause/Resume playback
   * **G Key:** Toggle Guide melody on/off (Not working some TGMode0 OKD)
   * **Number Keys (1-9):** Mute/Unmute Specific PTrack playback

@@ -63,7 +63,7 @@ public class OKDKDSPDevice
     //Not work
     public void SetDSPTone(byte high, byte low)
     {
-        //F0 43 7C 0E 10 00 03 03 <HI> <LOW> 01 F7
+        //F0 43 7C 0A 10 00 03 03 <HI> <LOW> 01 F7
         //0x22~0x5E
 
         if (high < 0x22 || high > 0x5E || low < 0x22 || low > 0x5E)
@@ -76,7 +76,7 @@ public class OKDKDSPDevice
             0xF0,
             0x43,
             0x7C,
-            0x0E,
+            0x0A,
             0x10,
             0x00,
             0x03,

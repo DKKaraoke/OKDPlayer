@@ -11,8 +11,8 @@ namespace OKDPlayer
     internal class Program
     {
         private static int kdspVolume = 0x75; //Default KDSP volume
-        private static byte kdspHighFreq = 0x22; //Default KDSP high frequency
-        private static byte kdspLowFreq = 0x22; //Default KDSP low frequency
+        private static byte kdspHighFreq = 0x45; //Default KDSP high frequency
+        private static byte kdspLowFreq = 0x45; //Default KDSP low frequency
         private static int transposeKey = 0;
         private static bool guideMelMuted = false;
         private static int syncoffsetAdpcm = 0;
@@ -125,8 +125,11 @@ namespace OKDPlayer
                 Console.WriteLine($"Setting KDSP device at port: {kdspDevPort}");
                 okd.SetKDSPDevice(kdspDevPort);
 
-                Console.WriteLine($"Setting KDSP volume to default ({kdspVolume}).");
+                Console.WriteLine($"Setting KDSP volume to default ({kdspVolume:X2}).");
                 okd.KDSPDev.SetDSPVolume((byte)kdspVolume);
+
+                Console.WriteLine($"Setting KDSP tone to default (Hi:{kdspHighFreq:X2}, Lo:{kdspLowFreq:X2}).");
+                okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
             }
 
 
@@ -303,7 +306,7 @@ namespace OKDPlayer
                     {
                         if (okd.KDSPDev is not null)
                         {
-                            kdspHighFreq++;
+                            kdspHighFreq--;
                             okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
                             Console.WriteLine($"Adjusting KDSP High Frequency up. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
 
@@ -315,7 +318,7 @@ namespace OKDPlayer
                     {
                         if (okd.KDSPDev is not null)
                         {
-                            kdspHighFreq--;
+                            kdspHighFreq++;
                             okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
                             Console.WriteLine($"Adjusting KDSP High Frequency down. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
                         }
@@ -324,7 +327,7 @@ namespace OKDPlayer
                     {
                         if (okd.KDSPDev is not null)
                         {
-                            kdspLowFreq++;
+                            kdspLowFreq--;
                             okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
                             Console.WriteLine($"Adjusting KDSP Low Frequency up. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
                         }
@@ -333,7 +336,7 @@ namespace OKDPlayer
                     {
                         if (okd.KDSPDev is not null)
                         {
-                            kdspLowFreq--;
+                            kdspLowFreq++;
                             okd.KDSPDev.SetDSPTone(kdspHighFreq, kdspLowFreq);
                             Console.WriteLine($"Adjusting KDSP Low Frequency down. Hi:{kdspHighFreq:X2}, LO:{kdspLowFreq:X2}");
                         }
